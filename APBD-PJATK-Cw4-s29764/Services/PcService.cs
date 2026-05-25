@@ -92,4 +92,16 @@ public class PcService(AppDbContext adc) : IPcService
             throw new NotFoundException("PC", id);
         }
     }
+
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+    {
+        var pc = await adc.Pcs.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        if (pc == null)
+        {
+            throw new NotFoundException("PC", id);
+        }
+        
+        adc.Pcs.Remove(pc);
+        await adc.SaveChangesAsync(cancellationToken);
+    }
 }
